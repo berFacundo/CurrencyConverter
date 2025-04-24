@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Conversor de Monedas</title>
+  <link rel="stylesheet" href="/exchangeMonedas/styles.css"> <!-- Vinculamos el archivo style.css -->
+</head>
+<body>
+  <h2>Conversor de monedas</h2>
+  <div id="contenedor"></div>
+
+  <script>
+    const monedas = ["USD", "EUR", "ARS", "BRL", "UYU", "GBP", "JPY", "MXN", "CLP", "CAD"];
+    const contenedor = document.getElementById("contenedor");
+
+    // Crear las 10 filas de inputs + selects con monedas predeterminadas
+    for (let i = 0; i < 10; i++) {
+      const div = document.createElement("div");
+      div.className = "fila";
+      div.innerHTML = `
+        <div class="moneda-container">
+          <div class="select-container">
+            <select data-id="${i}">
+              ${monedas.map(m => `<option value="${m}" ${m === monedas[i] ? 'selected' : ''}>${m}</option>`).join("")}
+            </select>
+          </div>
+          <div class="input-container">
+            <input type="number" data-id="${i}" value="1" step="any">
+          </div>
+        </div>
+      `;
+      contenedor.appendChild(div);
+    }
+
+    const inputs = document.querySelectorAll("input");
+    const selects = document.querySelectorAll("select");
+
+    // Agregar eventos
+    inputs.forEach(input => {
+      input.addEventListener("input", () => actualizarDesde(input.dataset.id));
+    });
+    selects.forEach(select => {
+      select.addEventListener("change", () => actualizarDesde(select.dataset.id));
+    });
+
+    async function actualizarDesde(origenId) {
+      const baseIdx = parseInt(origenId);
+      const baseValor = parseFloat(inputs[baseIdx].value);
+      const baseMoneda = selects[baseIdx].value;
+
+      if (isNaN(baseValor)) return;
+
+      const destinos = [];
+      selects.forEach((s, i) => {
+        const monedaDestino = s.value;
+        if (i !== baseIdx && monedaDestino !== baseMoneda && !destinos.includes(monedaDestino)) {
+          destinos.push(monedaDestino);
+        }
+      });
+
+      let tasas = {};
+      if (destinos.length > 0) {
+        // Aquí agregamos tu clave API de ExchangeRate-API
+        const apiKey = 'YOUR_API_KEY'; // Reemplaza con tu clave de API
+        const url = `https://v6.exchangerate-api.com/v6/${apiKey}/latest/${baseMoneda}`;
+        try {
+          const res = await fetch(url);
+          const data = await res.json();
+          tasas = data.conversion_rates;
+        } catch (err) {
+          console.error("Error:", err);
+        }
+      }
+
+      // Aplicar conversiones
+      selects.forEach((s, i) => {
+        const moneda = s.value;
+        if (i === baseIdx) return;
+        if (moneda === baseMoneda) {
+          inputs[i].value = baseValor;
+        } else if (tasas[moneda]) {
+          inputs[i].value = (baseValor * tasas[moneda]).toFixed(2);
+        } else {
+          inputs[i].value = "No disponible";
+        }
+      });
+    }
+
+    // Inicializar con la primera caja
+    actualizarDesde(0);
+  </script>
+</body>
+</html>
