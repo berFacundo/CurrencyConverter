@@ -19,7 +19,7 @@
       div.className = "fila";
       div.innerHTML = `
         <div class="moneda-container">
-          <input type="checkbox" class="check" data-id="${i}" checked>
+          <input type="checkbox" class="check" data-id="${i}">
           <div class="select-container">
             <select data-id="${i}">
               ${monedas.map(m => `<option value="${m}" ${m === monedas[i] ? 'selected' : ''}>${m}</option>`).join("")}
