@@ -18,6 +18,7 @@
       div.className = "fila";
       div.innerHTML = `
         <div class="moneda-container">
+          <input type="checkbox" class="check" data-id="${i}" checked>
           <div class="select-container">
             <select data-id="${i}">
               ${monedas.map(m => `<option value="${m}" ${m === monedas[i] ? 'selected' : ''}>${m}</option>`).join("")}
@@ -31,8 +32,9 @@
       contenedor.appendChild(div);
     }
   
-    const inputs = document.querySelectorAll("input");
+    const inputs = document.querySelectorAll("input[type='number']");
     const selects = document.querySelectorAll("select");
+    const checkboxes = document.querySelectorAll(".check");
   
     inputs.forEach(input => {
       input.addEventListener("input", () => actualizarDesde(input.dataset.id));
@@ -59,7 +61,6 @@
       let tasas = {};
       if (destinos.length > 0) {
         try {
-          // Llamamos a nuestro proxy API en Vercel
           const res = await fetch(`/api/proxy?base=${baseMoneda}`);
           const data = await res.json();
           tasas = data.conversion_rates;
@@ -70,7 +71,10 @@
   
       selects.forEach((s, i) => {
         const moneda = s.value;
-        if (i === baseIdx) return;
+        const checkbox = checkboxes[i];
+  
+        if (i === baseIdx || !checkbox.checked) return;
+  
         if (moneda === baseMoneda) {
           inputs[i].value = baseValor;
         } else if (tasas[moneda]) {
@@ -84,6 +88,7 @@
   
     actualizarDesde(0);
   </script>
+  
   
 </body>
 </html>
