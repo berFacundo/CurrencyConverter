@@ -7,57 +7,54 @@ body {
   background-color: rgb(15, 15, 15);
   color: white;
   font-family: "Poppins", sans-serif;
-  font-size: 16px; /* Reducido para móviles */
+  font-size: 18px;
   display: flex;
   justify-content: center;
   align-items: center;
-  min-height: 100vh; /* Cambiado de height a min-height para contenido largo */
+  min-height: 100vh;
   margin: 0;
-  flex-direction: column;
-  padding: 20px; /* Añadido padding para no pegarse a los bordes */
+  padding: 20px;
+  box-sizing: border-box;
 }
 
 .contenedor {
   display: flex;
   flex-direction: column;
   align-items: center;
-  width: 100%; /* Asegura que no se salga de la pantalla */
-  max-width: 800px; /* Limita el ancho máximo en pantallas grandes */
+  width: 100%;
+  max-width: 800px;
 }
 
 h2 {
-  font-size: 28px; /* Reducido para móviles */
-  margin-bottom: 20px;
+  font-size: 35px;
+  margin-bottom: 30px;
   text-align: center;
 }
 
 .fila {
   display: flex;
-  flex-direction: column; /* Cambiado a columna en móviles */
-  margin-bottom: 15px;
-  gap: 15px;
+  justify-content: center;
+  margin-bottom: 20px;
+  gap: 20px;
   width: 100%;
+  flex-wrap: wrap; /* Permite que los elementos se envuelvan en móviles */
 }
 
 .select-container, .input-container {
   display: flex;
   flex-direction: column;
-  gap: 8px;
-  justify-content: center;
-  align-items: center;
-  width: 100%;
+  gap: 10px;
+  min-width: 250px; /* Mantiene un ancho mínimo para los contenedores */
 }
 
 input, select {
-  width: 100%; /* Ahora ocupa el 100% del contenedor */
-  max-width: 300px; /* Pero con un máximo para no estirarse demasiado */
-  padding: 12px; /* Aumentado para mejor tacto en móviles */
-  font-size: 16px;
+  width: 250px;
+  padding: 10px;
+  font-size: 18px;
   background-color: transparent;
   color: white;
   border: 2px solid #fff;
   text-align: right;
-  box-sizing: border-box; /* Incluye padding en el ancho */
 }
 
 input[type="number"] {
@@ -68,7 +65,7 @@ input[type="number"] {
 
 select {
   background-color: rgb(15, 15, 15);
-  height: 45px; /* Aumentado para mejor usabilidad táctil */
+  height: 40px;
 }
 
 select option {
@@ -81,46 +78,54 @@ select:focus {
 
 .moneda-container {
   display: flex;
-  flex-direction: column; /* Cambiado a columna en móviles */
-  gap: 15px;
-  width: 100%;
+  gap: 20px;
+  flex-wrap: wrap; /* Permite que las monedas se envuelvan en móviles */
+  justify-content: center; /* Centra los elementos cuando se envuelven */
 }
 
 .moneda-container div {
   display: flex;
   align-items: center;
-  justify-content: center;
 }
 
-/* Media Queries para diferentes tamaños de pantalla */
-
-/* Tablet (768px en adelante) */
-@media (min-width: 768px) {
+/* Ajustes específicos para móviles */
+@media (max-width: 768px) {
   body {
-    font-size: 18px;
+    padding: 15px;
+    font-size: 16px;
   }
   
   h2 {
-    font-size: 35px;
+    font-size: 28px;
+    margin-bottom: 20px;
   }
   
   .fila {
-    flex-direction: row; /* Vuelve a fila en tablets/desktop */
-    justify-content: space-between;
+    gap: 15px;
   }
   
-  .moneda-container {
-    flex-direction: row; /* Vuelve a fila en tablets/desktop */
+  .select-container, .input-container {
+    min-width: 100%; /* Ocupa todo el ancho en móviles */
   }
   
   input, select {
-    width: 250px;
+    width: 100%;
+    max-width: 100%;
+    padding: 12px;
+  }
+  
+  .moneda-container {
+    gap: 15px;
   }
 }
 
-/* Desktop (992px en adelante) */
-@media (min-width: 992px) {
-  .contenedor {
-    padding: 0; /* Quita el padding en desktop */
+/* Ajuste para pantallas muy pequeñas */
+@media (max-width: 480px) {
+  h2 {
+    font-size: 24px;
+  }
+  
+  input, select {
+    font-size: 16px;
   }
 }
