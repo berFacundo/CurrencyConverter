@@ -61,7 +61,7 @@
       let tasas = {};
       if (destinos.length > 0) {
         // Aquí agregamos tu clave API de ExchangeRate-API
-        const apiKey = 'YOUR_API_KEY'; // Reemplaza con tu clave de API
+        const apiKey = 'API_CURRENCY_KEY'; // Reemplaza con tu clave de API
         const url = `https://v6.exchangerate-api.com/v6/${apiKey}/latest/${baseMoneda}`;
         try {
           const res = await fetch(url);
