@@ -43,6 +43,12 @@
       select.addEventListener("change", () => actualizarDesde(select.dataset.id));
     });
 
+    async function convertirMoneda(from, to, amount) {
+      const res = await fetch(`/api/convert?from=${from}&to=${to}&amount=${amount}`);
+      const data = await res.json();
+      return data.result;
+    }
+
     async function actualizarDesde(origenId) {
       const baseIdx = parseInt(origenId);
       const baseValor = parseFloat(inputs[baseIdx].value);
@@ -58,32 +64,12 @@
         }
       });
 
-      let tasas = {};
-      if (destinos.length > 0) {
-        // Aquí agregamos tu clave API de ExchangeRate-API
-        const apiKey = 'YOUR_API_KEY'; // Reemplaza con tu clave de API
-        const url = `https://v6.exchangerate-api.com/v6/${apiKey}/latest/${baseMoneda}`;
-        try {
-          const res = await fetch(url);
-          const data = await res.json();
-          tasas = data.conversion_rates;
-        } catch (err) {
-          console.error("Error:", err);
-        }
-      }
-
       // Aplicar conversiones
-      selects.forEach((s, i) => {
-        const moneda = s.value;
-        if (i === baseIdx) return;
-        if (moneda === baseMoneda) {
-          inputs[i].value = baseValor;
-        } else if (tasas[moneda]) {
-          inputs[i].value = (baseValor * tasas[moneda]).toFixed(2);
-        } else {
-          inputs[i].value = "No disponible";
-        }
-      });
+      for (const monedaDestino of destinos) {
+        const valorConvertido = await convertirMoneda(baseMoneda, monedaDestino, baseValor);
+        const input = document.querySelector(`[data-id="${monedas.indexOf(monedaDestino)}"]`);
+        if (input) input.value = valorConvertido.toFixed(2);
+      }
     }
 
     // Inicializar con la primera caja
